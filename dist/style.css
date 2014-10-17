@@ -2,7 +2,8 @@
     box-sizing: border-box;
 }
 * {
-    transition: 1s all ease;
+    -webkit-transition: 1s all ease;
+            transition: 1s all ease;
 }
 .container {
     max-width: 1024px;

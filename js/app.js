@@ -23,15 +23,20 @@ RepoMan.prototype.loadTemplateFile = function(templateName) {
         return htmlstring;
     });
 };
+RepoMan.prototype.getFollowerInfo = function() {
+    return $.get('https://api.github.com/users/' + this.username).then(function(data) {
+        return data;
+    })
+}
 
 RepoMan.prototype.putProfileDataOnPage = function(profileHtml, profile) {
     var d = new Date(profile.created_at);
+    profile.blog = "Blog: " + profile.blog;
     profile.joined = ["Joined on ", d.toDateString()].join("");
     document.querySelector('.left-column').innerHTML = _.template(profileHtml, profile);
 };
-
 RepoMan.prototype.putRepoDataOnPage = function(repoHtml, repos) {
-	console.log(repos)
+    console.log(repos)
     document.querySelector('.right-column').innerHTML =
         repos.sort(function(a, b) {
             var firstDate = new Date(a.updated_at),
@@ -51,10 +56,12 @@ RepoMan.prototype.init = function() {
         this.getUserInfo(),
         this.getRepoInfo(),
         this.loadTemplateFile('profile'),
-        this.loadTemplateFile('repo')
+        this.loadTemplateFile('repo'),
+        this.getFollowerInfo()
     ).then(function(profile, repos, profileHtml, repoHtml) {
-        self.putProfileDataOnPage(profileHtml, profile)
-        self.putRepoDataOnPage(repoHtml, repos)
+        self.putProfileDataOnPage(profileHtml, profile),
+            self.putRepoDataOnPage(repoHtml, repos)
+
     })
 };
 
